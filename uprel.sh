@@ -88,16 +88,16 @@ upload_file() {
 }
 
 #Fungsi Upload file Repository
+#!/bin/bash
 upload_all_files() {
   if [ -z "$TOKEN" ] || [ -z "$GH_USER" ] || [ -z "$REPO" ]; then
-# read -p" masukan email : " email
     echo "Token, Username, atau Repository belum diset!"
-    return
+    return 1
   fi
 
   # Nama branch utama (ubah jika berbeda)
   BRANCH="main"
-  
+
   # Dapatkan tanggal & waktu untuk commit message
   COMMIT_MSG="Auto-upload on $(date '+%Y-%m-%d %H:%M:%S')"
 
@@ -109,18 +109,26 @@ upload_all_files() {
   if [ ! -d ".git" ]; then
     git init
     git remote add origin "https://$TOKEN@github.com/$GH_USER/$REPO.git"
-    git checkout -b $BRANCH
+    git checkout -b "$BRANCH"
+  else
+    git remote set-url origin "https://$TOKEN@github.com/$GH_USER/$REPO.git"
   fi
 
   # Tambahkan semua file & lakukan commit
-  git add *
+  git add .
   git commit -m "$COMMIT_MSG"
 
-  # Push ke GitHub
-  git push -u origin $BRANCH
+  # Pastikan branch sudah dibuat di GitHub sebelum push
+  git branch -M "$BRANCH"
+
+  # Push ke GitHub dengan opsi --force jika perlu
+  git push -u origin "$BRANCH" --force
 
   echo "Semua file telah diunggah ke GitHub!"
 }
+
+# Jalankan fungsi
+upload_all_files
 
 fix_git() {
 # Pastikan branch utama adalah "main"
