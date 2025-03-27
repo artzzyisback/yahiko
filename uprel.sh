@@ -8,6 +8,7 @@ if [ ! -f "$CONFIG_FILE" ]; then
     read -p "GitHub Token: " TOKEN
     read -p "GitHub Username: " GH_USER
     read -p "Repository Name: " REPO
+    read -p "Email Github: " email
 
     # Simpan ke file konfigurasi
     echo "TOKEN=$TOKEN" > "$CONFIG_FILE"
@@ -103,9 +104,6 @@ upload_all_files() {
   # Konfigurasi Git
   git config --global user.name "$GH_USER"
   git config --global user.email "putrakullbanget@gmail.com"
-  
-  # Remote Repository
-#  git remote add origin https://github.com/$GH_USER/$REPO.git
 
   # Inisialisasi Git jika belum ada
   if [ ! -d ".git" ]; then
