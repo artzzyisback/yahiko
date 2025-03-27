@@ -136,7 +136,7 @@ while true; do
         1) get_release_id ;;
         2) upload_file ;;
 #        3) delete_file ;;
-        3) upload_to_repo ;;
+        3) upload_all_files ;;
         4) exit 0 ;;
         *) echo "Pilihan tidak valid!" ;;
     esac
