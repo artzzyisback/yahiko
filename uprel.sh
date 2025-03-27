@@ -128,7 +128,6 @@ upload_all_files() {
 }
 
 # Jalankan fungsi
-upload_all_files
 
 fix_git() {
 # Pastikan branch utama adalah "main"
