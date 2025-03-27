@@ -89,7 +89,7 @@ upload_file() {
 #Fungsi Upload file Repository
 upload_all_files() {
   if [ -z "$TOKEN" ] || [ -z "$GH_USER" ] || [ -z "$REPO" ]; then
-  read -p" masukan email : " email
+# read -p" masukan email : " email
     echo "Token, Username, atau Repository belum diset!"
     return
   fi
@@ -103,6 +103,9 @@ upload_all_files() {
   # Konfigurasi Git
   git config --global user.name "$GH_USER"
   git config --global user.email "putrakullbanget@gmail.com"
+  
+  # Remote Repository
+  git remote add origin https://github.com/$GH_USER/$REPO.git
 
   # Inisialisasi Git jika belum ada
   if [ ! -d ".git" ]; then

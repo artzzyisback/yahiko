@@ -102,7 +102,7 @@ upload_all_files() {
 
   # Konfigurasi Git
   git config --global user.name "$GH_USER"
-  git config --global user.email "$email"
+  git config --global user.email "putrakullbanget@gmail.com"
 
   # Inisialisasi Git jika belum ada
   if [ ! -d ".git" ]; then
