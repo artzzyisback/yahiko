@@ -105,17 +105,17 @@ upload_all_files() {
   git config --global user.email "putrakullbanget@gmail.com"
   
   # Remote Repository
-  git remote add origin https://github.com/$GH_USER/$REPO.git
+#  git remote add origin https://github.com/$GH_USER/$REPO.git
 
   # Inisialisasi Git jika belum ada
   if [ ! -d ".git" ]; then
     git init
-    git remote add origin "https://$TOKEN@github.com/$GH_USER/$REPO.git"
+    git remote add origin "https://github.com/$GH_USER/$REPO.git"
     git checkout -b $BRANCH
   fi
 
   # Tambahkan semua file & lakukan commit
-  git add .
+  git add *
   git commit -m "$COMMIT_MSG"
 
   # Push ke GitHub
