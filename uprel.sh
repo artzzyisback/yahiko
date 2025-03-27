@@ -122,6 +122,24 @@ upload_all_files() {
   echo "Semua file telah diunggah ke GitHub!"
 }
 
+fix_git() {
+# Pastikan branch utama adalah "main"
+git branch -M main
+
+# Tambahkan semua perubahan ke dalam commit
+git add .
+
+# Buat commit dengan pesan
+git commit -m "Initial commit"
+
+# Pastikan remote repository sudah benar
+git remote remove origin 2>/dev/null
+git remote add origin https://github.com/$GH_USER/REPO.git
+
+# Push ke repository GitHub
+git push -u origin main
+}
+
 # Menu utama
 while true; do
     clear
@@ -129,8 +147,9 @@ while true; do
     echo "1. Cek ID Release"
     echo "2. Upload File ke Release"
     echo "3. Upload File ke Repository"
+    echo "4. Fix Git (kalo gagal)"
 #    echo "3. Hapus File di Release"
-    echo "4. Keluar"
+    echo "5. Keluar"
     read -p "Pilih menu [1-3]: " CHOICE
 
     case $CHOICE in
@@ -138,7 +157,8 @@ while true; do
         2) upload_file ;;
 #        3) delete_file ;;
         3) upload_all_files ;;
-        4) exit 0 ;;
+        4) fix_git ;;
+        5) exit 0 ;;
         *) echo "Pilihan tidak valid!" ;;
     esac
 
