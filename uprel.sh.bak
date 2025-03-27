@@ -110,7 +110,7 @@ upload_all_files() {
   # Inisialisasi Git jika belum ada
   if [ ! -d ".git" ]; then
     git init
-    git remote add origin "https://$TOKEN@github.com/$GH_USER/$REPO.git"
+    git remote add origin "https://github.com/$GH_USER/$REPO.git"
     git checkout -b $BRANCH
   fi
 
