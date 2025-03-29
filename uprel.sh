@@ -86,35 +86,54 @@ load
 }
 
 # Fungsi untuk hapus file
-    delete_file() {
-  if [ -z "$ID_RELEASE" ]; then
-    echo "ID Release belum diset. Mengambil ID Release terbaru..."
-    get_release_id
-  fi
+delete_file() {
+# Load Konfigurasi
+CONFIG_FILE="$HOME/.uprel_config"
 
-  read -p "Masukkan nama file yang ingin dihapus: " FILE_NAME
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Konfigurasi belum ditemukan. Silakan jalankan skrip konfigurasi terlebih dahulu."
+    exit 1
+fi
 
-  # Cari ID asset dari file yang ingin dihapus
-  ASSET_ID=$(curl -s -H "Authorization: token $TOKEN" \
-    "https://api.github.com/repos/$GH_USER/$REPO/releases/$ID_RELEASE/assets" | \
-    jq -r ".[] | select(.name == \"$FILE_NAME\") | .id")
+source "$CONFIG_FILE"
 
-  if [ -z "$ASSET_ID" ] || [ "$ASSET_ID" == "null" ]; then
-    echo "File tidak ditemukan di release!"
-    return
-  fi
+# Pastikan token, user, dan repo telah diset
+if [ -z "$TOKEN" ] || [ -z "$GH_USER" ] || [ -z "$REPO" ]; then
+    echo "Konfigurasi tidak lengkap! Pastikan Token, Username, dan Repository telah diatur."
+    exit 1
+fi
 
-  # Hapus asset dari release dan ambil status respons HTTP
-  HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
-    -H "Authorization: token $TOKEN" \
-    "https://api.github.com/repos/$GH_USER/$REPO/releases/$ID_RELEASE/assets/$ASSET_ID")
+# Clone repo jika belum ada
+if [ ! -d "$REPO" ]; then
+    echo "Meng-clone repository..."
+    git clone "https://$TOKEN@github.com/$GH_USER/$REPO.git"
+fi
 
-  case "$HTTP_STATUS" in
-    204) echo "File $FILE_NAME telah dihapus!" ;;
-    404) echo "Gagal menghapus! File atau release tidak ditemukan." ;;
-    401|403) echo "Gagal menghapus! Token tidak valid atau tidak memiliki izin." ;;
-    *) echo "Gagal menghapus file! Status: $HTTP_STATUS" ;;
-  esac
+# Masuk ke folder repository
+cd "$REPO" || exit
+
+# Tampilkan daftar file
+echo "Daftar file/folder di repository:"
+ls -1
+
+# Minta input nama file/folder yang ingin dihapus
+read -p "Masukkan nama file/folder yang ingin dihapus: " TARGET
+
+# Hapus file/folder
+if [ -e "$TARGET" ]; then
+    rm -rf "$TARGET"
+    git rm -r "$TARGET"
+    echo "File/folder '$TARGET' berhasil dihapus."
+else
+    echo "File/folder '$TARGET' tidak ditemukan."
+    exit 1
+fi
+
+# Commit dan Push ke repository
+git commit -m "Hapus $TARGET dari repository"
+git push origin main
+load
+echo "Perubahan telah di-push ke GitHub."
 }
 
 #Fungsi Upload file Repository
@@ -201,15 +220,10 @@ echo "𝙋𝙧𝙤𝙨𝙚𝙨 𝙎𝙚𝙡𝙚𝙨𝙖𝙞....."
 }
 function shcd(){
 clear
-putih="\e[1;97m"
-BGX="\e[104m"
-blue="\e[1;96m"
-NC='\e[0m'
-clear
 echo -e " ${bang}────────────────────────────────────────────${NC}"
 echo -e "        ${g}.::.$NC ${wh}Tools Decrypt SHC${NC} ${g}.::.${NC}"
 echo -e " ${bang}────────────────────────────────────────────${NC}"
-echo -e " ${putih} Contoh Sleep : 0.000 - 0.500 ( Sesuaikan yg Cocok ${NC}"
+echo -e " ${putih} Contoh Sleep : 0.000 - 0.500 ( Sesuaikan yg Cocok) ${NC}"
 echo -e " ${putih} File Name ( Nama file yang mau di Decrypt )${NC}"
 echo -e " ${putih} Hasil Decrypt Cek di ( ls ) nama file ( core )${NC}"
 echo -e " ${bang}────────────────────────────────────────────${NC}"
@@ -225,6 +239,77 @@ echo -e "   proses sudah selesai "
 sleep 0.5
 chmod +x ${name}
 ./${name} & ( sleep ${waktu} && kill -SIGSEGV $! )
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+dec_m
+}
+
+kf() {
+curl -L -o kf.py "https://github.com/artzzyisback/yahiko/releases/download/1.0/kf.py" >> $CONFIG_FILE
+python3 kf.py
+}
+
+function bash64d(){
+clear
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e "        ${g}.::.$NC ${wh}Tools Decrypt Base64${NC} ${g}.::.${NC}"
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e " ${putih} File Name : Nama file yang mau di dec${NC}"
+echo -e " ${putih} Cek file hasil decrypt dengan ls${NC}"
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+read -p "File-Name : " file
+sleep 0.5
+echo -e "sedang dalam proses "
+sleep 0.5 && load
+echo -e "proses sudah selesai "
+sleep 0.5
+cat ${file} | tr ';' '\n' | grep 'RzE=' | cut -d '"' -f2 | tr ' ' '\n' | rev | base64 -d >> dec
+mv dec ${file}
+echo -e ""
+read -n 1 -s -r -p "Press any key to back on menu"
+dec_m
+}
+
+gzexed() {
+clear
+apt install gzexe -y
+clear
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e "        ${g}.::.$NC ${wh}Tools Decrypt Gzexe${NC} ${g}.::.${NC}"
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e " ${putih} File Name ( Nama file yang mau di Decrypt )${NC}"
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e " "
+read -p "   File Name : " name
+sleep 0.5
+echo -e "   sedang dalam proses "
+sleep 0.5 && load
+echo -e "   proses sudah selesai "
+sleep 0.5
+gzexe -d ${name}
+echo ""
+rm -rf ${name}~
+read -n 1 -s -r -p "Press any key to back on menu"
+dec_m
+}
+
+bzip2d() {
+clear
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e "        ${g}.::.$NC ${wh}Tools Decrypt Bzip2${NC} ${g}.::.${NC}"
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e " ${putih} File Name ( Nama file yang mau di Decrypt )${NC}"
+echo -e " ${putih} Output File ( Nama file yang habis di Decrypt )${NC}"    
+echo -e " ${bang}────────────────────────────────────────────${NC}"
+echo -e " "
+read -p "   File Name : " name
+read -p "   Output File : " path
+sleep 0.5
+echo -e "   sedang dalam proses "
+sleep 0.5 && load
+echo -e "   proses sudah selesai "
+sleep 0.5
+tail -n +23 ${name} | bzip2 -cd >> ${path}
 echo ""
 read -n 1 -s -r -p "Press any key to back on menu"
 dec_m
@@ -256,7 +341,7 @@ echo -e "${bang}╭════════════════════�
     case $sayang in
         1) shcd ;;
         2) bzip2d ;;
-        3) base64d ;;
+        3) bash64d ;;
         4) kf ;;
         5) gzexed ;;
         6) exit 0 ;;
@@ -264,30 +349,33 @@ echo -e "${bang}╭════════════════════�
     esac
 
     read -p "Tekan Enter untuk kembali ke menu..."
+dec_m
 }
 
 
 # Menu utama
 while true; do
     clear
-    echo -e "${bang}======${NC} ${merah}MENU${NC} ${bang}======${NC}"
+    echo -e " ${bang}────────────────────────────────────${NC}"
+    echo -e "       ${wh}••••• MENU SCRIPT •••••${NC}"
+    echo -e " ${bang}────────────────────────────────────${NC}"
     echo -e "${wh}1.${NC} ${z}Cek ID Release${NC}"
     echo -e "${wh}2.${NC} ${z}Upload File ke Release${NC}"
     echo -e "${wh}3.${NC} ${z}Upload File ke Repository${NC}"
-    echo -e "${wh}4.${NC} ${z}Fix Git (kalo gagal)${NC}"
+    echo -e "${wh}4.${NC} ${z}Delete File di Repository${NC}"
     echo -e "${wh}5.${NC} ${z}Menu Decrypt${NC}"
-#    echo "3. Hapus File di Release"
-    echo -e "${wh}6.${NC} ${z}Keluar${NC}"
-    read -p "Pilih menu [1-6] : " CHOICE
+    echo -e "${wh}6.${NC} ${z}Menu Encrypt${NC}"
+    echo -e "${wh}7.${NC} ${z}Keluar${NC}"
+    read -p "Pilih menu [1-7] : " CHOICE
 
     case $CHOICE in
         1) get_release_id ;;
         2) upload_file ;;
-#        3) delete_file ;;
         3) upload_all_files ;;
-        4) fix_git ;;
+        4) delete_file ;;
         5) dec_m ;;
-        6) exit 0 ;;
+        6) enc_m ;;
+        7) exit 0 ;;
         *) echo "Pilihan tidak valid!" ;;
     esac
 
