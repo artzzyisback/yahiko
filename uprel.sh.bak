@@ -2,10 +2,38 @@
 #WokszXDStore
 #JarzTunnel
 #ArtzzyIsBack
+akuu="\033[33m"  #yello
+merah="\033[1;31m"  #REDTERANG
+g='\e[0;32m'
+NC='\033[0m'
+Green="\e[92;1m"
+RED="\033[31m"
+YELLOW="\033[33m"
+BLUE="\033[36m"
+z="\033[96m"
+FONT="\033[0m"
+GREENBG="\033[42;37m"
+REDBG="\033[41;37m"
+OK="${Green}--->${FONT}"
+ERROR="${RED}[ERROR]${FONT}"
+bang="\033[1;93m"
+GRAY="\e[1;30m"
+NC='\e[0m'
+purple="\033[1;95m"
+red='\e[1;31m'
+green='\e[0;32m'
+tyblue() { echo -e "\\033[36;1m${*}\\033[0m"; }
+IP=$( curl -sS ipinfo.io/ip )
 CONFIG_FILE="$HOME/.uprel_config"
 
 # Cek Konfigurasi
 if [ ! -f "$CONFIG_FILE" ]; then
+echo -e "${akuu}# //============================================="
+echo -e "${akuu}# //	Author:	Artzzy"
+echo -e "${akuu}# //	Description: Menu Management"
+echo -e "${akuu}# //	Email: artzzy@s.id"
+echo -e "${akuu}# //    Telegram: https://t.me/artzzyr"
+echo -e "${akuu}# //============================================="
     echo "Konfigurasi belum ditemukan. Silakan isi data berikut:"
     read -p "GitHub Token: " TOKEN
     read -p "GitHub Username: " GH_USER
@@ -47,13 +75,13 @@ upload_file() {
     fi
 
     read -p "Masukkan nama file (misal.zip): " FILE_NAME
-    
+load    
     curl -X POST \
         -H "Authorization: token $TOKEN" \
         -H "Content-Type: application/zip" \
         --data-binary "@$FILE_NAME" \
         "https://uploads.github.com/repos/$GH_USER/$REPO/releases/$ID_RELEASE/assets?name=$FILE_NAME"
-load
+        
     echo -e "\nUpload selesai!"
 }
 
@@ -171,18 +199,86 @@ echo "𝙋𝙧𝙤𝙨𝙚𝙨 𝙎𝙚𝙙𝙖𝙣𝙜 𝘽𝙚𝙧𝙟𝙖𝙡
 sleep 3 & spinner
 echo "𝙋𝙧𝙤𝙨𝙚𝙨 𝙎𝙚𝙡𝙚𝙨𝙖𝙞....."
 }
+function shcd(){
+clear
+putih="\e[1;97m"
+BGX="\e[104m"
+blue="\e[1;96m"
+NC='\e[0m'
+clear
+echo -e " ${bang}──────────────────────────────────────${NC}"
+echo -e "        ${g}.::.$NC ${wh}Tools Decrypt SHC${NC} ${g}.::.${NC}"
+echo -e " ${bang}──────────────────────────────────────${NC}"
+echo -e " ${putih} Contoh Sleep : 0.000 - 0.500 ( Sesuaikan yg Cocok ${NC}"
+echo -e " ${putih} File Name ( Nama file yang mau di Decrypt )${NC}"
+echo -e " ${putih} Hasil Decrypt Cek di ( ls ) nama file ( core )${NC}"
+echo -e " ${bang}──────────────────────────────────────${NC}"
+
+ulimit -c unlimited
+#read -p "   Perizinan File : " izin
+read -p "   File Name : " name
+read -p "   Sleep Time : " waktu
+sleep 0.5
+echo -e "   sedang dalam proses "
+sleep 0.5 && load
+echo -e "   proses sudah selesai "
+sleep 0.5
+chmod +x ${name}
+./${name} & ( sleep ${waktu} && kill -SIGSEGV $! )
+echo ""
+read -n 1 -s -r -p "Press any key to back on menu"
+dec_m
+}
+
+dec_m() {
+dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+biji=`date +"%Y-No such file or directory-0" -d "$dateFromServer"`
+red() { echo -e "\\033[32;1m${*}\\033[0m"; }
+
+#intro wak¡
+wh="\033[1;37m"
+clear
+echo -e " ${bang}──────────────────────────────────────${NC}"
+echo -e "        ${g}.::.$NC ${wh}Menu Decrypt${NC} ${g}.::.${NC}"
+echo -e " ${bang}──────────────────────────────────────${NC}"
+echo -e "${bang}╭════════════════════════════════════════╮${NC}"
+ echo -e "${bang}│ ${wh}Please select a your Choice    $NC        ${bang}│${NC}"
+ echo -e "${bang}╰════════════════════════════════════════╯${NC}"
+ echo -e "${bang}╭════════════════════════════════════════╮${NC}"
+ echo -e "${bang}│$NC ${z} [ 1 ]  ${wh}DECRYPT SHC      ${NC}"
+ echo -e "${bang}│$NC ${z} [ 2 ]  ${wh}DECRYPT BZIP2     ${NC}"
+ echo -e "${bang}│$NC ${z} [ 3 ]  ${wh}DECRYPT BASHROOCK     ${NC}"
+ echo -e "${bang}│$NC ${z} [ 4 ]  ${wh}DECRYPT/ENC FUSCATOR     ${NC}"
+ echo -e "${bang}│$NC ${z} [ 5 ]  ${wh}DECRYPT GZEXE     ${NC}"
+ echo -e "${bang}╰════════════════════════════════════════╯${NC}"
+                  read -p "Pilih menu [1-6] : " sayang
+
+    case $sayang in
+        1) shcd ;;
+        2) bzip2d ;;
+        3) base64d ;;
+        4) kf ;;
+        5) gzexed ;;
+        6) exit 0 ;;
+        *) echo "Pilihan tidak valid!" ;;
+    esac
+
+    read -p "Tekan Enter untuk kembali ke menu..."
+}
+
 
 # Menu utama
 while true; do
     clear
-    echo "=== MENU ==="
-    echo "1. Cek ID Release"
-    echo "2. Upload File ke Release"
-    echo "3. Upload File ke Repository"
-    echo "4. Fix Git (kalo gagal)"
+    echo -e "${bang}======${NC} ${merah}MENU${NC} ${bang}======${NC}"
+    echo -e "${wh}1.${NC} ${z}Cek ID Release${NC}"
+    echo -e "${wh}2.${NC} ${z}Upload File ke Release${NC}"
+    echo -e "${wh}3.${NC} ${z}Upload File ke Repository${NC}"
+    echo -e "${wh}4.${NC} ${z}Fix Git (kalo gagal)${NC}"
+    echo -e "${wh}5.${NC} ${z}Menu Decrypt${NC}"
 #    echo "3. Hapus File di Release"
-    echo "5. Keluar"
-    read -p "Pilih menu [1-3]: " CHOICE
+    echo -e "${wh}6.${NC} ${z}Keluar${NC}"
+    read -p "Pilih menu [1-6] : " CHOICE
 
     case $CHOICE in
         1) get_release_id ;;
@@ -190,7 +286,8 @@ while true; do
 #        3) delete_file ;;
         3) upload_all_files ;;
         4) fix_git ;;
-        5) exit 0 ;;
+        5) dec_m ;;
+        6) exit 0 ;;
         *) echo "Pilihan tidak valid!" ;;
     esac
 
